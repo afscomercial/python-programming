@@ -12,7 +12,7 @@ uvicorn
 ### git commands
 
 ```bash
-git clone https://github.com/afscomercial/introduction-artificial-intelligence.git
+git clone https://github.com/afscomercial/python-programming
 git add .
 git commit -m "commit message"
 git push origin main
