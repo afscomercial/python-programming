@@ -1,28 +1,100 @@
 {% include 'layout.html' %}
 
-<div class="container">
+<div class="container mt-5">
     <div class="card">
         <div class="card-header">
-            Let's edit your prediction!
+            Edit Prediction
         </div>
         <div class="card-body">
-            <form method="POST">
+            <form onsubmit="updatePrediction(event)">
+                <input type="hidden" name="id" value="{{ prediction.id }}">
+
                 <div class="form-group">
-                    <label>Type</label>
-                    <input type="text" class="form-control" name="title" value="{{prediction.type}}" required>
+                    <label for="latitude">Latitude</label>
+                    <input type="number" step="any" class="form-control" id="latitude" name="latitude" value="{{ prediction.latitude }}" required>
                 </div>
+
                 <div class="form-group">
-                    <label>Description</label>
-                    <textarea name="description" class="form-control" rows="3" required>{{prediction.description}}</textarea>
+                    <label for="longitude">Longitude</label>
+                    <input type="number" step="any" class="form-control" id="longitude" name="longitude" value="{{ prediction.longitude }}" required>
                 </div>
+
                 <div class="form-group">
-                    <label>City</label>
-                    <input type="text" class="form-control" name="title" value="{{prediction.city}}" required>
+                    <label for="lease_term">Lease Term</label>
+                    <select class="form-control" id="lease_term" name="lease_term" required>
+                        <option value="5.0" {% if prediction.lease_term == 5.0 %}selected{% endif %}>Long Term</option>
+                        <option value="1.0" {% if prediction.lease_term == 1.0 %}selected{% endif %}>Short Term</option>
+                        <option value="0.0" {% if prediction.lease_term == 0.0 %}selected{% endif %}>Negotiable</option>
+                    </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Edit your prediction</button>
-                <button onclick="window.location.href='/delete/{{prediction.id}}'"
-                        type="button" class="btn btn-danger">Delete</button>
+
+                <div class="form-group">
+                    <label for="type">Type</label>
+                    <select class="form-control" id="type" name="type" required>
+                        <option value="Apartment" {% if prediction.type == 'Apartment' %}selected{% endif %}>Apartment</option>
+                        <option value="Townhouse" {% if prediction.type == 'Townhouse' %}selected{% endif %}>Townhouse</option>
+                        <option value="Room For Rent" {% if prediction.type == 'Room For Rent' %}selected{% endif %}>Room For Rent</option>
+                        <option value="House" {% if prediction.type == 'House' %}selected{% endif %}>House</option>
+                        <option value="Condo Unit" {% if prediction.type == 'Condo Unit' %}selected{% endif %}>Condo Unit</option>
+                        <option value="Duplex" {% if prediction.type == 'Duplex' %}selected{% endif %}>Duplex</option>
+                        <option value="Basement" {% if prediction.type == 'Basement' %}selected{% endif %}>Basement</option>
+                        <option value="Main Floor" {% if prediction.type == 'Main Floor' %}selected{% endif %}>Main Floor</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="beds">Beds</label>
+                    <input type="number" class="form-control" id="beds" name="beds" value="{{ prediction.beds }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="baths">Baths</label>
+                    <input type="number" class="form-control" id="baths" name="baths" value="{{ prediction.baths }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="sq_feet">Sq Feet</label>
+                    <input type="number" class="form-control" id="sq_feet" name="sq_feet" value="{{ prediction.sq_feet }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="furnishing">Furnishing</label>
+                    <select class="form-control" id="furnishing" name="furnishing" required>
+                        <option value="Unfurnished" {% if prediction.furnishing == 'Unfurnished' %}selected{% endif %}>Unfurnished</option>
+                        <option value="Furnished" {% if prediction.furnishing == 'Furnished' %}selected{% endif %}>Furnished</option>
+                        <option value="Negotiable" {% if prediction.furnishing == 'Negotiable' %}selected{% endif %}>Negotiable</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="smoking">Smoking</label>
+                    <select class="form-control" id="smoking" name="smoking" required>
+                        <option value="Non-Smoking" {% if prediction.smoking == 'Non-Smoking' %}selected{% endif %}>Non-Smoking</option>
+                        <option value="Smoke Free Building" {% if prediction.smoking == 'Smoke Free Building' %}selected{% endif %}>Smoke Free Building</option>
+                        <option value="Negotiable" {% if prediction.smoking == 'Negotiable' %}selected{% endif %}>Negotiable</option>
+                        <option value="Smoking Allowed" {% if prediction.smoking == 'Smoking Allowed' %}selected{% endif %}>Smoking Allowed</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cats">Cats</label>
+                    <input type="number" class="form-control" id="cats" name="cats" value="{{ prediction.cats }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dogs">Dogs</label>
+                    <input type="number" class="form-control" id="dogs" name="dogs" value="{{ prediction.dogs }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="price_prediction">Price Prediction</label>
+                    <input type="text" class="form-control" id="price_prediction" name="price_prediction" value="{{ prediction.price_prediction }}" readonly>
+                    <button type="button" onclick="generatePricePrediction()" class="btn btn-info mt-2">Generate Price</button>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Update Prediction</button>
             </form>
         </div>
     </div>
 </div>
+

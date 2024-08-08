@@ -1,20 +1,34 @@
-from fastapi import HTTPException, Request
-from jose import JWTError
+from typing import Dict, Union
 
-PREDICTIONS = [
-    {"id": "1", "type": "two_bedroom", "city": "toronto", "prediction": "2400", "complete": False},
-    {"id": "2", "type": "room", "city": "mississauga", "prediction": "1000", "complete": False},
-    {"id": "3", "type": "room", "city": "brampton", "prediction": "1500", "complete": False},
-    {"id": "4", "type": "studio", "city": "scarborough", "prediction": "1800", "complete": False},
-    {"id": "5", "type": "one_bedroom", "city": "toronto", "prediction": "2200", "complete": False},
-]
+PREDICTIONS = []
 
-    
 
-async def read_prediction(prediction_id: str):
-    try:
-        for prediction in PREDICTIONS:
-            if prediction.get("id").casefold() == prediction_id.casefold():
-                return prediction
-    except JWTError:
-        raise HTTPException(status_code=404, detail="Not found")
+def read_prediction(prediction_id: str) -> Union[Dict, None]:
+    for prediction in PREDICTIONS:
+        if prediction["id"] == prediction_id:
+            return prediction
+    return None
+
+def create_prediction(new_prediction: Dict):
+    PREDICTIONS.append(new_prediction)
+
+def update_prediction(updated_prediction: Dict):
+    for i in range(len(PREDICTIONS)):
+        if PREDICTIONS[i]["id"] == updated_prediction["id"]:
+            PREDICTIONS[i] = updated_prediction
+            return
+
+def delete_prediction(prediction_id: str):
+    global PREDICTIONS
+    index_to_remove = None
+    # Find the index of the item to be removed
+    for index, prediction in enumerate(PREDICTIONS):
+        if prediction["id"] == prediction_id:
+            index_to_remove = index
+            break
+    print("Index to remove:", index_to_remove)
+    # If found, remove the item
+    if index_to_remove is not None:
+        PREDICTIONS.pop(index_to_remove)
+    else:
+        raise ValueError("Prediction with the given ID not found")

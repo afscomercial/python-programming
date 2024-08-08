@@ -35,6 +35,7 @@ class ModelLoader(object):
         """
         Predict data using model
         """
+        print("Data:", data)
         # make the data a pandas DataFrame
         data_df = pd.DataFrame(data)
         

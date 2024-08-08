@@ -1,26 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <!-- Required meta tags -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', path='/css/base.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', path='/css/bootstrap.css') }}">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<head>
+		<!-- Required meta tags -->
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="{{ url_for('static', path='/css/base.css') }}"
+		/>
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="{{ url_for('static', path='/css/bootstrap.css') }}"
+		/>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
 
-    <title>Rent Prediction App</title>
+		<title>Rent Prediction App</title>
+	</head>
+	<body>
+		{% include 'navbar.html' %} {% block content %} {% endblock %}
 
-</head>
-<body>
+		<script src="{{ url_for('static', path='/js/jquery-slim.js') }}"></script>
+		<script src="{{ url_for('static', path='/js/popper.js') }}"></script>
+		<script src="{{ url_for('static', path='/js/bootstrap.js') }}"></script>
+		<script>
+			function generatePricePrediction() {
+				const features = {
+					latitude: parseFloat(
+						document.querySelector('input[name="latitude"]').value
+					),
+					longitude: parseFloat(
+						document.querySelector('input[name="longitude"]').value
+					),
+					lease_term: parseFloat(
+						document.querySelector('select[name="lease_term"]').value
+					),
+					type: document.querySelector('select[name="type"]').value,
+					beds: parseFloat(document.querySelector('input[name="beds"]').value),
+					baths: parseFloat(
+						document.querySelector('input[name="baths"]').value
+					),
+					sq_feet: parseFloat(
+						document.querySelector('input[name="sq_feet"]').value
+					),
+					furnishing: document.querySelector('select[name="furnishing"]').value,
+					smoking: document.querySelector('select[name="smoking"]').value,
+					cats: parseInt(
+						document.querySelector('input[name="cats"]').value,
+						10
+					),
+					dogs: parseInt(document.querySelector('input[name="dogs"]').value, 10)
+				};
+				console.log('features: ', features);
+				fetch('/predict', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(features)
+				})
+					.then((response) => response.json())
+					.then((data) => {
+						document.getElementById('price_prediction').value =
+							data.price_prediction;
+					})
+					.catch((error) => console.error('Error:', error));
+			}
+			async function deletePrediction(id, button) {
+				if (confirm('Are you sure you want to delete this prediction?')) {
+					try {
+						const response = await fetch(
+							`/predictions/delete_prediction/${id}`,
+							{
+								method: 'DELETE'
+							}
+						);
 
-{% include 'navbar.html' %}
+						if (response.ok) {
+							button.closest('tr').remove(); // Remove the row directly from the table
+						} else {
+							console.error('Failed to delete prediction');
+						}
+					} catch (error) {
+						console.error('Error deleting prediction:', error);
+					}
+				}
+			}
 
-{% block content %}
+			async function updatePrediction(event) {
+				event.preventDefault();
 
-{% endblock %}
+				const form = document.querySelector('form');
+				const formData = new FormData(form);
+				const updatedPrediction = Object.fromEntries(formData.entries());
 
+				try {
+					const response = await fetch('/predictions/update_prediction', {
+						method: 'PUT',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(updatedPrediction)
+					});
 
-<script src="{{ url_for('static', path='/js/jquery-slim.js') }}"></script>
-<script src="{{ url_for('static', path='/js/popper.js') }}"></script>
-<script src="{{ url_for('static', path='/js/bootstrap.js') }}"></script>
-</body>
+					if (!response.ok) {
+						throw new Error('Error updating prediction');
+					}
+
+					const result = await response.json();
+					alert(result.message);
+					window.location.href = '/';
+				} catch (error) {
+					console.error('Error:', error);
+					alert('Error updating prediction');
+				}
+			}
+		</script>
+	</body>
 </html>
