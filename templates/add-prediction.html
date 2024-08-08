@@ -1,99 +1,165 @@
 {% include 'layout.html' %}
 
-<div class="container mt-5">
-    <div class="card">
-        <div class="card-header text-center">
-            Make a new prediction
-        </div>
-        <div class="card-body">
-            <form method="POST" action="/predictions/create_prediction">
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label>Latitude</label>
-                        <input type="number" step="0.0001" class="form-control" name="latitude" required>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Longitude</label>
-                        <input type="number" step="0.0001" class="form-control" name="longitude" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label>Lease Term</label>
-                        <select class="form-control" name="lease_term" required>
-                            <option value="5.0">Long Term</option>
-                            <option value="1.0">Short Term</option>
-                            <option value="0.0">Negotiable</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Type</label>
-                        <select class="form-control" name="type" required>
-                            <option value="Apartment">Apartment</option>
-                            <option value="Townhouse">Townhouse</option>
-                            <option value="Room For Rent">Room For Rent</option>
-                            <option value="House">House</option>
-                            <option value="Condo Unit">Condo Unit</option>
-                            <option value="Duplex">Duplex</option>
-                            <option value="Basement">Basement</option>
-                            <option value="Main Floor">Main Floor</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label>Beds</label>
-                        <input type="number" step="0.1" class="form-control" name="beds" required>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Baths</label>
-                        <input type="number" step="0.1" class="form-control" name="baths" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label>Square Feet</label>
-                        <input type="number" class="form-control" name="sq_feet" required>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Furnishing</label>
-                        <select class="form-control" name="furnishing" required>
-                            <option value="Unfurnished">Unfurnished</option>
-                            <option value="Furnished">Furnished</option>
-                            <option value="Negotiable">Negotiable</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label>Smoking</label>
-                        <select class="form-control" name="smoking" required>
-                            <option value="Non-Smoking">Non-Smoking</option>
-                            <option value="Smoke Free Building">Smoke Free Building</option>
-                            <option value="Negotiable">Negotiable</option>
-                            <option value="Smoking Allowed">Smoking Allowed</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label>Cats</label>
-                        <input type="number" class="form-control" name="cats" required>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label>Dogs</label>
-                        <input type="number" class="form-control" name="dogs" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-8">
-                        <label>Price Prediction</label>
-                        <input type="text" class="form-control" id="price_prediction" name="price_prediction" required readonly>
-                    </div>
-                    <div class="form-group col-md-4 d-flex align-items-end">
-                        <button type="button" class="btn btn-secondary" onclick="generatePricePrediction()">Generate Price</button>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Add new prediction</button>
-            </form>
-        </div>
-    </div>
+<div class="card mt-5">
+	<div class="card-header text-center">Make a new prediction</div>
+	<div class="card-body">
+		<form method="POST" action="/predictions/create_prediction">
+			<div class="form-row">
+				<!-- Place Autocomplete Input -->
+				<div class="form-group col-md-12">
+					<label for="place_autocomplete">Location</label>
+					<input
+						type="text"
+						class="form-control"
+						id="place_autocomplete"
+						placeholder="Enter a location"
+						required
+					/>
+				</div>
+
+				<!-- Hidden Inputs for Latitude and Longitude -->
+				<input type="hidden" id="latitude" name="latitude" />
+				<input type="hidden" id="longitude" name="longitude" />
+			</div>
+
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label>Lease Term</label>
+					<select class="form-control" name="lease_term" required>
+						<option value="5.0">Long Term</option>
+						<option value="1.0">Short Term</option>
+						<option value="0.0">Negotiable</option>
+					</select>
+				</div>
+				<div class="form-group col-md-6">
+					<label>Type</label>
+					<select class="form-control" name="type" required>
+						<option value="Apartment">Apartment</option>
+						<option value="Townhouse">Townhouse</option>
+						<option value="Room For Rent">Room For Rent</option>
+						<option value="House">House</option>
+						<option value="Condo Unit">Condo Unit</option>
+						<option value="Duplex">Duplex</option>
+						<option value="Basement">Basement</option>
+						<option value="Main Floor">Main Floor</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label>Beds</label>
+					<input
+						type="number"
+						step="0.1"
+						class="form-control"
+						name="beds"
+						required
+					/>
+				</div>
+				<div class="form-group col-md-6">
+					<label>Baths</label>
+					<input
+						type="number"
+						step="0.1"
+						class="form-control"
+						name="baths"
+						required
+					/>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label>Square Feet</label>
+					<input type="number" class="form-control" name="sq_feet" required />
+				</div>
+				<div class="form-group col-md-6">
+					<label>Furnishing</label>
+					<select class="form-control" name="furnishing" required>
+						<option value="Unfurnished">Unfurnished</option>
+						<option value="Furnished">Furnished</option>
+						<option value="Negotiable">Negotiable</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label>Smoking</label>
+					<select class="form-control" name="smoking" required>
+						<option value="Non-Smoking">Non-Smoking</option>
+						<option value="Smoke Free Building">Smoke Free Building</option>
+						<option value="Negotiable">Negotiable</option>
+						<option value="Smoking Allowed">Smoking Allowed</option>
+					</select>
+				</div>
+				<div class="form-group col-md-3">
+					<label>Cats</label>
+					<select class="form-control" name="cats" id="cats" required>
+						<option value="1">Yes</option>
+						<option value="0">No</option>
+					</select>
+				</div>
+				<div class="form-group col-md-3">
+					<label>Dogs</label>
+					<select class="form-control" name="dogs" id="dogs" required>
+						<option value="1">Yes</option>
+						<option value="0">No</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-row">
+				<div class="form-group col-md-8">
+					<label>Price Prediction</label>
+					<input
+						type="text"
+						class="form-control"
+						id="price_prediction"
+						name="price_prediction"
+						required
+						readonly
+					/>
+				</div>
+				<div class="form-group col-md-4 d-flex align-items-end">
+					<button
+						type="button"
+						class="btn btn-secondary"
+						onclick="generatePricePrediction()"
+					>
+						Generate Price
+					</button>
+				</div>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Add new prediction</button>
+		</form>
+	</div>
 </div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const placeInput = document.getElementById('place_autocomplete');
+		const latitudeInput = document.getElementById('latitude');
+		const longitudeInput = document.getElementById('longitude');
+
+		const autocomplete = new google.maps.places.Autocomplete(placeInput, {
+			componentRestrictions: { country: 'ca' } // Restrict to Canada
+		});
+
+		autocomplete.addListener('place_changed', function () {
+			const place = autocomplete.getPlace();
+
+			if (place.geometry) {
+				const lat = place.geometry.location.lat();
+				const lng = place.geometry.location.lng();
+
+				latitudeInput.value = lat;
+				longitudeInput.value = lng;
+			} else {
+				alert("No details available for input: '" + placeInput.value + "'");
+			}
+		});
+	});
+</script>

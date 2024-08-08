@@ -1,7 +1,7 @@
 {% include 'layout.html' %}
 
-<div class="container mt-5">
-    <div class="card">
+
+    <div class="card mt-5">
         <div class="card-header">
             Edit Prediction
         </div>
@@ -9,92 +9,163 @@
             <form onsubmit="updatePrediction(event)">
                 <input type="hidden" name="id" value="{{ prediction.id }}">
 
-                <div class="form-group">
-                    <label for="latitude">Latitude</label>
-                    <input type="number" step="any" class="form-control" id="latitude" name="latitude" value="{{ prediction.latitude }}" required>
-                </div>
+                    <!-- Place Autocomplete Input -->
+                    <div class="form-group">
+                        <label for="place_autocomplete">Location</label>
+                        <input type="text" class="form-control" id="place_autocomplete" placeholder="Enter a location" required>
+                    </div>
+    
+                    <!-- Hidden Inputs for Latitude and Longitude -->
+                    <input type="hidden" id="latitude" name="latitude" value="{{ prediction.latitude }}">
+                    <input type="hidden" id="longitude" name="longitude" value="{{ prediction.longitude }}">
 
-                <div class="form-group">
-                    <label for="longitude">Longitude</label>
-                    <input type="number" step="any" class="form-control" id="longitude" name="longitude" value="{{ prediction.longitude }}" required>
-                </div>
+                    <div class="form-group">
+                        <label for="lease_term">Lease Term</label>
+                        <select class="form-control" id="lease_term" name="lease_term" required>
+                            <option value="5.0" {% if prediction.lease_term == 5.0 %}selected{% endif %}>Long Term</option>
+                            <option value="1.0" {% if prediction.lease_term == 1.0 %}selected{% endif %}>Short Term</option>
+                            <option value="0.0" {% if prediction.lease_term == 0.0 %}selected{% endif %}>Negotiable</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label for="lease_term">Lease Term</label>
-                    <select class="form-control" id="lease_term" name="lease_term" required>
-                        <option value="5.0" {% if prediction.lease_term == 5.0 %}selected{% endif %}>Long Term</option>
-                        <option value="1.0" {% if prediction.lease_term == 1.0 %}selected{% endif %}>Short Term</option>
-                        <option value="0.0" {% if prediction.lease_term == 0.0 %}selected{% endif %}>Negotiable</option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="type">Type</label>
+                        <select class="form-control" id="type" name="type" required>
+                            <option value="Apartment" {% if prediction.type == 'Apartment' %}selected{% endif %}>Apartment</option>
+                            <option value="Townhouse" {% if prediction.type == 'Townhouse' %}selected{% endif %}>Townhouse</option>
+                            <option value="Room For Rent" {% if prediction.type == 'Room For Rent' %}selected{% endif %}>Room For Rent</option>
+                            <option value="House" {% if prediction.type == 'House' %}selected{% endif %}>House</option>
+                            <option value="Condo Unit" {% if prediction.type == 'Condo Unit' %}selected{% endif %}>Condo Unit</option>
+                            <option value="Duplex" {% if prediction.type == 'Duplex' %}selected{% endif %}>Duplex</option>
+                            <option value="Basement" {% if prediction.type == 'Basement' %}selected{% endif %}>Basement</option>
+                            <option value="Main Floor" {% if prediction.type == 'Main Floor' %}selected{% endif %}>Main Floor</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label for="type">Type</label>
-                    <select class="form-control" id="type" name="type" required>
-                        <option value="Apartment" {% if prediction.type == 'Apartment' %}selected{% endif %}>Apartment</option>
-                        <option value="Townhouse" {% if prediction.type == 'Townhouse' %}selected{% endif %}>Townhouse</option>
-                        <option value="Room For Rent" {% if prediction.type == 'Room For Rent' %}selected{% endif %}>Room For Rent</option>
-                        <option value="House" {% if prediction.type == 'House' %}selected{% endif %}>House</option>
-                        <option value="Condo Unit" {% if prediction.type == 'Condo Unit' %}selected{% endif %}>Condo Unit</option>
-                        <option value="Duplex" {% if prediction.type == 'Duplex' %}selected{% endif %}>Duplex</option>
-                        <option value="Basement" {% if prediction.type == 'Basement' %}selected{% endif %}>Basement</option>
-                        <option value="Main Floor" {% if prediction.type == 'Main Floor' %}selected{% endif %}>Main Floor</option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="beds">Beds</label>
+                        <input type="number" class="form-control" id="beds" name="beds" value="{{ prediction.beds }}" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="beds">Beds</label>
-                    <input type="number" class="form-control" id="beds" name="beds" value="{{ prediction.beds }}" required>
-                </div>
+                    <div class="form-group">
+                        <label for="baths">Baths</label>
+                        <input type="number" class="form-control" id="baths" name="baths" value="{{ prediction.baths }}" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="baths">Baths</label>
-                    <input type="number" class="form-control" id="baths" name="baths" value="{{ prediction.baths }}" required>
-                </div>
+                    <div class="form-group">
+                        <label for="sq_feet">Sq Feet</label>
+                        <input type="number" class="form-control" id="sq_feet" name="sq_feet" value="{{ prediction.sq_feet }}" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="sq_feet">Sq Feet</label>
-                    <input type="number" class="form-control" id="sq_feet" name="sq_feet" value="{{ prediction.sq_feet }}" required>
-                </div>
+                    <div class="form-group">
+                        <label for="furnishing">Furnishing</label>
+                        <select class="form-control" id="furnishing" name="furnishing" required>
+                            <option value="Unfurnished" {% if prediction.furnishing == 'Unfurnished' %}selected{% endif %}>Unfurnished</option>
+                            <option value="Furnished" {% if prediction.furnishing == 'Furnished' %}selected{% endif %}>Furnished</option>
+                            <option value="Negotiable" {% if prediction.furnishing == 'Negotiable' %}selected{% endif %}>Negotiable</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label for="furnishing">Furnishing</label>
-                    <select class="form-control" id="furnishing" name="furnishing" required>
-                        <option value="Unfurnished" {% if prediction.furnishing == 'Unfurnished' %}selected{% endif %}>Unfurnished</option>
-                        <option value="Furnished" {% if prediction.furnishing == 'Furnished' %}selected{% endif %}>Furnished</option>
-                        <option value="Negotiable" {% if prediction.furnishing == 'Negotiable' %}selected{% endif %}>Negotiable</option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="smoking">Smoking</label>
+                        <select class="form-control" id="smoking" name="smoking" required>
+                            <option value="Non-Smoking" {% if prediction.smoking == 'Non-Smoking' %}selected{% endif %}>Non-Smoking</option>
+                            <option value="Smoke Free Building" {% if prediction.smoking == 'Smoke Free Building' %}selected{% endif %}>Smoke Free Building</option>
+                            <option value="Negotiable" {% if prediction.smoking == 'Negotiable' %}selected{% endif %}>Negotiable</option>
+                            <option value="Smoking Allowed" {% if prediction.smoking == 'Smoking Allowed' %}selected{% endif %}>Smoking Allowed</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label for="smoking">Smoking</label>
-                    <select class="form-control" id="smoking" name="smoking" required>
-                        <option value="Non-Smoking" {% if prediction.smoking == 'Non-Smoking' %}selected{% endif %}>Non-Smoking</option>
-                        <option value="Smoke Free Building" {% if prediction.smoking == 'Smoke Free Building' %}selected{% endif %}>Smoke Free Building</option>
-                        <option value="Negotiable" {% if prediction.smoking == 'Negotiable' %}selected{% endif %}>Negotiable</option>
-                        <option value="Smoking Allowed" {% if prediction.smoking == 'Smoking Allowed' %}selected{% endif %}>Smoking Allowed</option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="cats">Cats</label>
+                        <select class="form-control" id="cats" name="cats" required>
+                            <option value="1" {% if prediction.cats == '1' %}selected{% endif %}>Yes</option>
+                            <option value="0" {% if prediction.cats == '0' %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label for="cats">Cats</label>
-                    <input type="number" class="form-control" id="cats" name="cats" value="{{ prediction.cats }}" required>
-                </div>
+                    <div class="form-group">
+                        <label for="dogs">Dogs</label>
+                        <select class="form-control" id="dogs" name="dogs" required>
+                            <option value="1" {% if prediction.dogs == 1 %}selected{% endif %}>Yes</option>
+                            <option value="0" {% if prediction.dogs == 0 %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label for="dogs">Dogs</label>
-                    <input type="number" class="form-control" id="dogs" name="dogs" value="{{ prediction.dogs }}" required>
-                </div>
+                    <div class="form-group">
+                        <label for="price_prediction">Price Prediction</label>
+                        <input type="text" class="form-control" id="price_prediction" name="price_prediction" value="{{ prediction.price_prediction }}" readonly>
+                        <button type="button" onclick="generatePricePrediction()" class="btn btn-info mt-2">Generate Price</button>
+                    </div>
 
-                <div class="form-group">
-                    <label for="price_prediction">Price Prediction</label>
-                    <input type="text" class="form-control" id="price_prediction" name="price_prediction" value="{{ prediction.price_prediction }}" readonly>
-                    <button type="button" onclick="generatePricePrediction()" class="btn btn-info mt-2">Generate Price</button>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Update Prediction</button>
+                    <button type="submit" class="btn btn-primary">Update Prediction</button>
             </form>
         </div>
     </div>
-</div>
 
+
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const placeInput = document.getElementById('place_autocomplete');
+		const latitudeInput = document.getElementById('latitude');
+		const longitudeInput = document.getElementById('longitude');
+
+		const autocomplete = new google.maps.places.Autocomplete(placeInput);
+
+		autocomplete.addListener('place_changed', function () {
+			const place = autocomplete.getPlace();
+
+			if (place.geometry) {
+				const lat = place.geometry.location.lat();
+				const lng = place.geometry.location.lng();
+
+				latitudeInput.value = lat;
+				longitudeInput.value = lng;
+			} else {
+				alert("No details available for input: '" + placeInput.value + "'");
+			}
+		});
+	});
+    function initAutocomplete() {
+        const autocompleteInput = document.getElementById('place_autocomplete');
+        const latitudeInput = document.getElementById('latitude');
+        const longitudeInput = document.getElementById('longitude');
+
+        // Initialize Autocomplete with Canadian location restriction
+        const autocomplete = new google.maps.places.Autocomplete(autocompleteInput, {
+        componentRestrictions: { country: 'ca' } // Restrict to Canada
+        });
+
+        // Reverse Geocoding to set the initial value of the autocomplete input
+        const lat = parseFloat(latitudeInput.value);
+        const lng = parseFloat(longitudeInput.value);
+        const latLng = { lat, lng };
+
+        const geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({ location: latLng }, (results, status) => {
+        if (status === 'OK') {
+            if (results[0]) {
+            autocompleteInput.value = results[0].formatted_address;
+            } else {
+            console.error('No results found');
+            }
+        } else {
+            console.error('Geocoder failed due to: ' + status);
+        }
+        });
+
+        // Update latitude and longitude hidden inputs on place selection
+        autocomplete.addListener('place_changed', function () {
+        const place = autocomplete.getPlace();
+        if (place.geometry) {
+            latitudeInput.value = place.geometry.location.lat();
+            longitudeInput.value = place.geometry.location.lng();
+        }
+        });
+    }
+
+    // Initialize autocomplete when the page loads
+    document.addEventListener('DOMContentLoaded', initAutocomplete);
+</script>

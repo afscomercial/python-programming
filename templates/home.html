@@ -28,7 +28,33 @@
 					</tr>
 				</thead>
 				<tbody id="predictions-table-body">
-					<!-- Data will be populated here -->
+					{% for prediction in predictions %}
+					<tr>
+						<th scope="row">{{ loop.index }}</th>
+						<td>{{ prediction.latitude }}</td>
+						<td>{{ prediction.longitude }}</td>
+						<td>{{ prediction.lease_term }}</td>
+						<td>{{ prediction.type }}</td>
+						<td>{{ prediction.beds }}</td>
+						<td>{{ prediction.baths }}</td>
+						<td>{{ prediction.sq_feet }}</td>
+						<td>{{ prediction.furnishing }}</td>
+						<td>{{ prediction.smoking }}</td>
+						<td>{{ 'Yes' if prediction.cats == 1 else 'No' }}</td>
+						<td>{{ 'Yes' if prediction.dogs == 1 else 'No' }}</td>
+						<td>{{ prediction.price_prediction }}</td>
+						<td>
+							<a href="/edit/{{ prediction.id }}" class="btn btn-warning btn-sm"
+								>Edit</a
+							>
+							<a
+								href="/delete/{{ prediction.id }}"
+								class="btn btn-danger btn-sm"
+								>Delete</a
+							>
+						</td>
+					</tr>
+					{% endfor %}
 				</tbody>
 			</table>
 		</div>
@@ -43,7 +69,7 @@
 		try {
 			const response = await fetch('/predictions');
 			const predictions = await response.json();
-            console.log(predictions);
+			console.log(predictions);
 			const tableBody = document.getElementById('predictions-table-body');
 
 			tableBody.innerHTML = ''; // Clear existing data
@@ -52,28 +78,28 @@
 				const row = document.createElement('tr');
 
 				row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${prediction.latitude}</td>
-                        <td>${prediction.longitude}</td>
-                        <td>${prediction.lease_term}</td>
-                        <td>${prediction.type}</td>
-                        <td>${prediction.beds}</td>
-                        <td>${prediction.baths}</td>
-                        <td>${prediction.sq_feet}</td>
-                        <td>${prediction.furnishing}</td>
-                        <td>${prediction.smoking}</td>
-                        <td>${prediction.cats}</td>
-                        <td>${prediction.dogs}</td>
-                        <td>${prediction.price_prediction}</td>
-                        <td>
-                            <button onclick="deletePrediction('${
-															prediction.id
-														}', this)" type="button" class="btn btn-danger btn-sm">Delete</button>
-                            <a href="/edit-prediction/${
-															prediction.id
-														}" class="btn btn-info btn-sm">Edit</a>
-                        </td>
-                    `;
+                <td>${index + 1}</td>
+                <td>${(parseFloat(prediction.latitude) || 0).toFixed(4)}</td>
+                <td>${(parseFloat(prediction.longitude) || 0).toFixed(4)}</td>
+                <td>${prediction.lease_term}</td>
+                <td>${prediction.type}</td>
+                <td>${prediction.beds}</td>
+                <td>${prediction.baths}</td>
+                <td>${prediction.sq_feet}</td>
+                <td>${prediction.furnishing}</td>
+                <td>${prediction.smoking}</td>
+                <td>${prediction.cats === '1' ? 'Yes' : 'No'}</td>
+                <td>${prediction.dogs === '1' ? 'Yes' : 'No'}</td>
+                <td>${prediction.price_prediction}</td>
+                <td>
+                    <button onclick="deletePrediction('${
+											prediction.id
+										}', this)" type="button" class="btn btn-danger btn-sm">Delete</button>
+                    <a href="/edit-prediction/${
+											prediction.id
+										}" class="btn btn-info btn-sm">Edit</a>
+                </td>
+            `;
 
 				tableBody.appendChild(row);
 			});

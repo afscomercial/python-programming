@@ -100,6 +100,7 @@ async def create_new_prediction(
 
 @router.put("/predictions/update_prediction")
 async def update_existing_prediction(updated_prediction: dict = Body()):
+    print("Updating prediction", updated_prediction)
     update_prediction(updated_prediction)
     return {"message": "Prediction updated successfully"}
 

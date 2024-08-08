@@ -19,6 +19,7 @@
 		/>
 
 		<title>Rent Prediction App</title>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvCOr4EQsKdYoz8BT5TVSsn0uh0KAjKcg&libraries=places"async defer></script>
 	</head>
 	<body>
 		{% include 'navbar.html' %} {% block content %} {% endblock %}
@@ -26,6 +27,7 @@
 		<script src="{{ url_for('static', path='/js/jquery-slim.js') }}"></script>
 		<script src="{{ url_for('static', path='/js/popper.js') }}"></script>
 		<script src="{{ url_for('static', path='/js/bootstrap.js') }}"></script>
+		
 		<script>
 			function generatePricePrediction() {
 				const features = {
@@ -49,10 +51,13 @@
 					furnishing: document.querySelector('select[name="furnishing"]').value,
 					smoking: document.querySelector('select[name="smoking"]').value,
 					cats: parseInt(
-						document.querySelector('input[name="cats"]').value,
+						document.querySelector('select[name="cats"]').value,
 						10
 					),
-					dogs: parseInt(document.querySelector('input[name="dogs"]').value, 10)
+					dogs: parseInt(
+						document.querySelector('select[name="dogs"]').value,
+						10
+					)
 				};
 				console.log('features: ', features);
 				fetch('/predict', {
