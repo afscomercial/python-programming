@@ -44,7 +44,7 @@ class ModelLoader(object):
 model_path = os.getenv("MODEL_PATH")
 
 model_loader = ModelLoader(
-    path="/Users/andressalguero/Documents/lambton/1214-Python Programming/python-programming/model/best_gradient_boosting_model.pkl",
+    path=model_path,
     name="toronto_rental_price",
     version=1.0,
 )
