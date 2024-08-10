@@ -38,14 +38,18 @@ class PredictionFeatures(BaseModel):
     cats: int
     dogs: int
 
+# Define routes
+# GET endpoint to render the home page
 @router.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("home.html", {"request": request, "predictions": PREDICTIONS})
 
+# GET endpoint to render the add prediction page
 @router.get("/add-prediction", response_class=HTMLResponse)
 async def add_new_prediction(request: Request):
     return templates.TemplateResponse("add-prediction.html", {"request": request})
 
+# GET endpoint to render the edit prediction page
 @router.get("/edit-prediction/{prediction_id}", response_class=HTMLResponse)
 async def edit_prediction(request: Request, prediction_id: str):
     prediction = read_prediction(prediction_id)
@@ -53,18 +57,19 @@ async def edit_prediction(request: Request, prediction_id: str):
         raise HTTPException(status_code=404, detail="Prediction not found")
     return templates.TemplateResponse("edit-prediction.html", {"request": request, "prediction": prediction})
 
+# GET endpoint to return all predictions
 @router.get("/predictions")
 async def read_all_predictions():
     print(PREDICTIONS)
     return PREDICTIONS
-
+# GET endpoint to return a single prediction
 @router.get("/prediction/{prediction_id}")
 async def read_single_prediction(prediction_id: str):
     prediction = read_prediction(prediction_id)
     if not prediction:
         raise HTTPException(status_code=404, detail="Prediction not found")
     return prediction
-
+# POST endpoint to create a new prediction
 @router.post("/predictions/create_prediction")
 async def create_new_prediction(
     latitude: float = Form(...),
@@ -97,19 +102,19 @@ async def create_new_prediction(
     }
     create_prediction(new_prediction)
     return RedirectResponse(url="/", status_code=303)
-
+# PUT endpoint to update an existing prediction
 @router.put("/predictions/update_prediction")
 async def update_existing_prediction(updated_prediction: dict = Body()):
     print("Updating prediction", updated_prediction)
     update_prediction(updated_prediction)
     return {"message": "Prediction updated successfully"}
-
+# DELETE endpoint to delete an existing prediction
 @router.delete("/predictions/delete_prediction/{prediction_id}")
 async def delete_existing_prediction(prediction_id: str):
     print("Deleting prediction with id:", prediction_id)
     delete_prediction(prediction_id)
     return {"message": "Prediction deleted successfully"}
-
+# POST endpoint to generate price prediction
 @router.post("/predict")
 async def generate_price_prediction(features: PredictionFeatures):
     features_dict = features.model_dump() 
